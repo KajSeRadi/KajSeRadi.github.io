@@ -1,0 +1,25 @@
+---
+layout: default
+title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
+---
+
+<h1>Projekti</h1>
+
+<div class="projekti">
+  {% for projekt in site.projekti %}
+  <div class="projekt">
+    <div class="podaci">
+      <h2>{{ projekt.ime }}</h2>
+      <h3>Trenutna faza: {{ projekt.faza }}</h3>
+      <h3>Vrijednost: {{ projekt.vrijednost }}</h3>
+      <div class="sadrzaj">
+	{{ projekt.content }}
+      </div>
+    </div>
+    <div class="slika">
+      <img src="{{ projekt.slika_url }}" alt="{{ projekt.slika_tekst }}">
+    </div>
+		
+  </div>
+  {% endfor %}
+</div>

@@ -2,3 +2,32 @@
 ---
 
 @import "base";
+
+.projekti {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.projekt {
+    display: flex;
+    flex-direction: row;
+}
+
+.podaci {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.sadrzaj {
+    display: flex;
+    flex-direction: column;
+    flex: 3;
+}
+
+.slika {
+    display: flex;
+    flex: 1;
+    height: 300px;
+}
