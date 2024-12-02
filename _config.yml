@@ -4,3 +4,16 @@ title: "" # the name of your site, e.g. ACME Corp.
 
 collections:
   projekti:
+    output: true
+
+
+defaults:
+  - scope:
+      path: ""
+      type: "projekti"
+    values:
+      layout: projekt
+  - scope:
+      path: ""
+    values:
+      layout: "default"

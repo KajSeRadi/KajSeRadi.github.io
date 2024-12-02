@@ -1,0 +1,27 @@
+---
+layout: default
+---
+
+<div class="velika_slika">
+  <div>
+    <img src="{{ page.slika_url }}" alt="{{ page.slika_tekst }}"> <br/>
+    <small>{{ page.slika_izvor }}</small>
+  </div>
+</div>
+
+<hr>
+
+<div class="projekt projekt_stranica">
+  <div class="podaci">
+    <h2>{{ page.ime }}</h2>
+    <h3>Trenutna faza: {{ page.faza }}</h3>
+    <h3>Vrijednost: {{ page.vrijednost }}</h3>
+  </div>
+
+  <div class="opis">
+    <div>
+      {{ content }}
+    </div>
+  </div>
+
+</div>

@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="{{ "/assets/css/main.css" | relative_url }}">
   </head>
   <body>
-    {{ content }}
+    <nav>
+      <div class="content">
+        {% for item in site.data.navigation %}
+        <a href="{{ item.link }}"
+           {% if page.url == item.link %} class="active" {% endif %}>
+          {{ item.name }}
+        </a>
+      {% endfor %}
+      </div>
+    </nav>
+
+    <div class="content">
+      {{ content }}
+    </div>
   </body>
 </html>
