@@ -9,6 +9,7 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
       <h2>{{ projekt.ime }}</h2>
       <h3>Trenutna faza: {{ projekt.faza }}</h3>
       <h3>Vrijednost: {{ projekt.vrijednost }}</h3>
+      <small>Posljednji put ažurirano: {{ projekt.date | date: "%d.%m.%Y." }}</small>
     </div>
     <div class="slika">
       <div>

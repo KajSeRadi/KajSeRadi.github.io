@@ -44,9 +44,11 @@ nav a.active {
 }
 
 .projekt {
+    padding-bottom: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
     display: flex;
     flex-flow: row wrap;
-    padding: 20px;
     text-decoration: none;
     color: black;
 }
@@ -63,6 +65,10 @@ nav a.active {
     display: flex;
     flex-direction: column;
     flex: 350px;
+}
+
+.podaci small {
+    color: #777;
 }
 
 .opis {
@@ -119,4 +125,9 @@ nav a.active {
     margin-top: 5px;
     margin-bottom: 5px;
     font-weight: normal;
+}
+
+.projekt_stranica h4 {
+    margin-top: 16px;
+    margin-bottom: 5px;
 }
