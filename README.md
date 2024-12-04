@@ -19,6 +19,9 @@ U mapi "_projekti" se nalaze postojeći projekti na web stranici. Najjednostavni
 - \<p\> i \</p\> - označavaju odlomak teksta
 - \<a\> i \</a\> - označavaju poveznicu/link s koje su uzete informacije, najbolje je s time označiti dio teksta koji smatrate smislenim za kliknuti
 
+Kada ste ispunili šablonu, možete ju poslati na gore navedeni e-mail pa ću je ručno dodati.
 
 
+# Pitanja i odgovori
 
+Za sva daljnja pitanja ili komentare slobodno pošaljite e-mail na [kajseradi@proton.me](mailto:kajseradi@proton.me) ili otvorite novi "Issue" na GitHub-u.
