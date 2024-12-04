@@ -16,8 +16,8 @@ U mapi "_projekti" se nalaze postojeći projekti na web stranici. Najjednostavni
 - slika_tekst - tekst koji opisuje što se na slici nalazi
 - slika_izvor - izvor od kuda je slika, prikazuje se sivim slovima ispod slike
 - h4 - datum kada su informacije objavljene, svaka nova objava se stavlja na početak, a ostale objave se spuštaju niže na stranici
-- <p> i </p> - označavaju odlomak teksta
-- <a> i </a> - označavaju poveznicu/link s koje su uzete informacije, najbolje je s time označiti dio teksta koji smatrate smislenim za kliknuti
+- \<p\> i \</p\> - označavaju odlomak teksta
+- \<a\> i \</a\> - označavaju poveznicu/link s koje su uzete informacije, najbolje je s time označiti dio teksta koji smatrate smislenim za kliknuti
 
 
 
