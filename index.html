@@ -2,8 +2,26 @@
 title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 ---
 
+<div id="map"></div>
+
 <div class="projekti">
+
+  {% assign lokacije = "" | split: ','  %}
+  {% assign imena = "" | split: ','  %}
+  {% assign urls = "" | split: ','  %}
+
   {% for projekt in site.projekti reversed %}
+
+  {% assign lokacija_array = projekt.geo_lokacija | split: ", " %}
+  {% assign ime_array = projekt.ime | split: ", " %}
+  {% assign url_array = projekt.url | split: ", " %}
+  {% assign lokacije = lokacije | concat: lokacija_array %}
+
+  {% unless lokacija_array == empty %}
+  {% assign imena = imena | concat: ime_array %}
+  {% assign urls = urls | concat: url_array %}
+  {% endunless %}
+
   <a href="{{ projekt.url }}" class="projekt">
     <div class="podaci">
       <h2>{{ projekt.ime }}</h2>
@@ -20,3 +38,25 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
   </a>
   {% endfor %}
 </div>
+
+<script>
+  var map = L.map('map').setView([45.7949, 15.9841], 12);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  var locations = {{ lokacije | join: "," | prepend: "[" | append: "]" }};
+  var imena = [{% for ime in imena %}
+               {{ ime | prepend: "'" | append: "'" }},
+               {% endfor %}];
+  var urls = [{% for url in urls %}
+              {{ urls | prepend: "'" | append: "'" }},
+              {% endfor %}];
+
+  for (let i = 0; i < locations.length; i++) {
+      var marker = L.marker(locations[i]).addTo(map);
+      marker.bindPopup(imena[i]);
+  }
+
+</script>
