@@ -9,17 +9,20 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
   {% assign lokacije = "" | split: ','  %}
   {% assign imena = "" | split: ','  %}
   {% assign urls = "" | split: ','  %}
+  {% assign slike_urls = "" | split: ','  %}
 
   {% for projekt in site.projekti reversed %}
 
   {% assign lokacija_array = projekt.geo_lokacija | split: ", " %}
   {% assign ime_array = projekt.ime | split: ", " %}
   {% assign url_array = projekt.url | split: ", " %}
+  {% assign slike_url_array = projekt.slika_url | split: ", " %}
   {% assign lokacije = lokacije | concat: lokacija_array %}
 
   {% unless lokacija_array == empty %}
   {% assign imena = imena | concat: ime_array %}
   {% assign urls = urls | concat: url_array %}
+  {% assign slike_urls = slike_urls | concat: slike_url_array %}
   {% endunless %}
 
   <a href="{{ projekt.url }}" class="projekt">
@@ -51,12 +54,19 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
                {{ ime | prepend: "'" | append: "'" }},
                {% endfor %}];
   var urls = [{% for url in urls %}
-              {{ urls | prepend: "'" | append: "'" }},
+              {{ url | prepend: "'" | append: "'" }},
               {% endfor %}];
+  var slike_urls = [{% for url in slike_urls %}
+		    {{ url | prepend: "'" | append: "'" }},
+		    {% endfor %}];
+
 
   for (let i = 0; i < locations.length; i++) {
-      var marker = L.marker(locations[i]).addTo(map);
-      marker.bindPopup(imena[i]);
+      var slika = "<a href='" + urls[i] + "'>" +  imena[i] + "<br/> <img src='" + slike_urls[i]  + "' style='max-height:200px; max-width:200px;'> </a>";
+      var marker = L.marker(locations[i]);
+      marker.bindPopup(slika);
+      marker.addTo(map);
+      //marker.bindPopup(imena[i]);
   }
 
 </script>
