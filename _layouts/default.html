@@ -14,7 +14,7 @@
   </head>
   <body>
     <nav>
-      <div class="content">
+      <div class="navigation">
         {% for item in site.data.navigation %}
         <a href="{{ item.link }}"
            {% if page.url == item.link %} class="active" {% endif %}>
