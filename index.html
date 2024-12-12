@@ -5,27 +5,9 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 <div id="map"></div>
 
 <div class="projekti">
-
-  {% assign lokacije = "" | split: ','  %}
-  {% assign imena = "" | split: ','  %}
-  {% assign urls = "" | split: ','  %}
-  {% assign slike_urls = "" | split: ','  %}
-
+  
   {% for projekt in site.projekti reversed %}
-
-  {% assign lokacija_array = projekt.geo_lokacija | split: ", " %}
-  {% assign ime_array = projekt.ime | split: ", " %}
-  {% assign url_array = projekt.url | split: ", " %}
-  {% assign slike_url_array = projekt.slika_url | split: ", " %}
-  {% assign lokacije = lokacije | concat: lokacija_array %}
-
-  {% unless lokacija_array == empty %}
-  {% assign imena = imena | concat: ime_array %}
-  {% assign urls = urls | concat: url_array %}
-  {% assign slike_urls = slike_urls | concat: slike_url_array %}
-  {% endunless %}
-
-  <a href="{{ projekt.url }}" class="projekt">
+  <a href="{{ projekt.url }}" class="projekt" id="{{ projekt.id }}">
     <div class="podaci">
       <h2>{{ projekt.ime }}</h2>
       <h3>Trenutna faza: {{ projekt.faza }}</h3>
@@ -40,30 +22,23 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
     </div>
   </a>
   {% endfor %}
+  
 </div>
 
 <script>
+
+  var projekti = JSON.parse(decodeURI('{{ site.projekti | jsonify | uri_escape }}'));
+  
   var map = L.map('map').setView([45.7949, 15.9841], 11);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
 
-  var locations = {{ lokacije | join: "," | prepend: "[" | append: "]" }};
-  var imena = [{% for ime in imena %}
-               {{ ime | prepend: "'" | append: "'" }},
-               {% endfor %}];
-  var urls = [{% for url in urls %}
-              {{ url | prepend: "'" | append: "'" }},
-              {% endfor %}];
-  var slike_urls = [{% for url in slike_urls %}
-		    {{ url | prepend: "'" | append: "'" }},
-		    {% endfor %}];
 
-
-  for (let i = 0; i < locations.length; i++) {
-      var slika = "<a href='" + urls[i] + "'>" +  imena[i] + "<br/> <img src='" + slike_urls[i]  + "' style='max-height:200px; max-width:200px;'> </a>";
-      var marker = L.marker(locations[i]);
+  for (let i = 0; i < projekti.length; i++) {
+      var slika = "<a href='" + projekti[i].url + "'>" +  projekti[i].ime + "<br/> <img src='" + projekti[i].slika_url  + "' style='max-height:200px; max-width:200px;'> </a>";
+      var marker = L.marker(projekti[i].geo_lokacija);
       marker.bindPopup(slika);
       marker.addTo(map);
       //marker.bindPopup(imena[i]);
