@@ -31,7 +31,6 @@ nav a.active {
     background-color: #365d93
 }
 
-
 .navigation {
     max-width: 960px;
     margin: auto;
@@ -43,6 +42,31 @@ nav a.active {
     margin: auto;
 }
 
+.filteri {
+    display: flex;
+    flex-driection: row;
+    gap: 5px;
+    padding-top: 20px;
+}
+
+.filteri button {
+    background-color: #163d73;
+    color: #eee;
+    font-size: 18px;
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    border-style: none;
+}
+
+.filteri button:hover {
+    background-color: #567db3;
+}
+
+.filteri button.active {
+    background-color: #365d93
+}
 
 .projekti {
     display: flex;

@@ -4,6 +4,11 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 
 <div id="map"></div>
 
+<div class="filteri" id="filteri">
+  <button type="button" onclick="prikaziSveProjekte(this)" class="active">Svi projekti</button>
+  <button type="button" onclick="prikaziGotoveProjekte(this)">Samo gotovi projekti</button>
+</div>
+
 <div class="projekti">
   
   {% for projekt in site.projekti reversed %}
@@ -27,6 +32,8 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 
 <script>
 
+  var filteri = document.getElementById("filteri");
+  
   var projekti = JSON.parse(decodeURI('{{ site.projekti | jsonify | uri_escape }}'));
   
   var map = L.map('map').setView([45.7949, 15.9841], 11);
@@ -35,13 +42,59 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
 
+  var markeri = new Map();
 
   for (let i = 0; i < projekti.length; i++) {
       var slika = "<a href='" + projekti[i].url + "'>" +  projekti[i].ime + "<br/> <img src='" + projekti[i].slika_url  + "' style='max-height:200px; max-width:200px;'> </a>";
       var marker = L.marker(projekti[i].geo_lokacija);
       marker.bindPopup(slika);
       marker.addTo(map);
+      markeri.set(projekti[i].id, marker);
       //marker.bindPopup(imena[i]);
+  }
+
+  function fokusirajFilterButton(element) {
+      for (var i = 0; i < filteri.children.length; i++) {
+	  var child = filteri.children[i];
+	  if (child == element) {
+	      child.classList.add("active");
+	  } else {
+	      child.classList.remove("active");
+	  }
+      }
+  }
+
+  function prikaziSveProjekte(element) {
+      fokusirajFilterButton(element);
+
+      for (var i = 0; i < projekti.length; i++) {
+	  projekt = projekti[i]
+	  marker = markeri.get(projekt.id);
+	  if (!map.hasLayer(marker)) {
+	      marker.addTo(map);
+	      document.getElementById(projekt.id).style.display = 'flex';
+	  }
+      }
+  }
+
+  function prikaziGotoveProjekte(element) {
+      fokusirajFilterButton(element);
+
+      for (var i = 0; i < projekti.length; i++) {
+	  projekt = projekti[i]
+	  marker = markeri.get(projekt.id);
+	  if (projekt.faza != "Dovršeno") {
+	      if (map.hasLayer(marker)) {
+		  marker.removeFrom(map);
+		  document.getElementById(projekt.id).style.display = 'none';
+	      }
+	  } else {
+	      if (!map.hasLayer(marker)) {
+		  marker.addTo(map);
+		  document.getElementById(projekt.id).style.display = 'flex';
+	      }
+	  }
+      }
   }
 
 </script>
