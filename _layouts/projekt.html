@@ -4,7 +4,11 @@ layout: default
 
 <div class="velika_slika">
   <div>
-    <img src="{{ page.slika_url }}" alt="{{ page.slika_tekst }}"> <br/>
+    <picture>
+      <source srcset="{{ page.slika_url }}.webp" type="image/webp" />
+      <img src="{{ page.slika_url }}.png" alt="{{ page.slika_tekst }}">
+    </picture>
+    <br/>
     <small>{{ page.slika_izvor }}</small>
   </div>
 </div>

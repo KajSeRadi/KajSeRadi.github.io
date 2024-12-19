@@ -20,10 +20,12 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
       <small>Posljednji put ažurirano: {{ projekt.date | date: "%d.%m.%Y." }}</small>
     </div>
     <div class="slika">
-      <div>
-        <img src="{{ projekt.slika_url }}" alt="{{ projekt.slika_tekst }}"> <br/>
-        <small>{{ projekt.slika_izvor }}</small>
-      </div>
+      <picture>
+	<source srcset="{{ projekt.slika_url }}.webp" type="image/webp" />
+	<img src="{{ projekt.slika_url }}.png" alt="{{ projekt.slika_tekst }}">
+      </picture>
+      <br/>
+      <small>{{ projekt.slika_izvor }}</small>
     </div>
   </a>
   {% endfor %}
