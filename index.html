@@ -47,8 +47,8 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
   var markeri = new Map();
 
   for (let i = 0; i < projekti.length; i++) {
-  var slika = "<a href='" + projekti[i].url + "'>" +  projekti[i].ime +
-	"<br/> <picture><source srcset='" + projekti[i].slika_url + ".webp' type='image/webp' /><img src='" + projekti[i].slika_url  + ".jpg' style='max-height:100px; max-width:100%;'> </a>";
+  var slika = "<a href='" + projekti[i].url + "' style='max-width: 200px; white-space: pre-wrap; word-wrap: break-word;'>" +  projekti[i].ime +
+	"<picture><source srcset='" + projekti[i].slika_url + ".webp' type='image/webp' /><img src='" + projekti[i].slika_url  + ".jpg' style='width: 200px; aspect-ratio: 4 / 3; object-fit: cover; padding-top: 5px;'> </a>";
       var marker = L.marker(projekti[i].geo_lokacija);
       marker.bindPopup(slika);
       marker.addTo(map);
