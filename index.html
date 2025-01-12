@@ -2,7 +2,9 @@
 title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 ---
 
-<div id="map"></div>
+<div id="map">
+  <button id="ucitajKartuButton" type="button" onclick="ucitajKartu()">Učitaj kartu</button>
+</div>
 
 <div class="filteri" id="filteri">
   <button type="button" onclick="prikaziSveProjekte(this)" class="active">Svi projekti</button>
@@ -10,7 +12,7 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 </div>
 
 <div class="projekti">
-  
+
   {% for projekt in site.projekti reversed %}
   <a href="{{ projekt.url }}" class="projekt" id="{{ projekt.id }}">
     <div class="podaci">
@@ -29,31 +31,46 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
     </div>
   </a>
   {% endfor %}
-  
+
 </div>
 
 <script>
 
-  var filteri = document.getElementById("filteri");
-  
-  var projekti = JSON.parse(decodeURI('{{ site.projekti | jsonify | uri_escape }}'));
-  
-  var map = L.map('map').setView([45.7949, 15.9841], 11);
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
+  async function ucitajKartu() {
+      // Sakri gumb nakon sto je karta ucitana
+      document.getElementById("ucitajKartuButton").style.display = 'none';
 
-  var markeri = new Map();
+      var filteri = document.getElementById("filteri");
 
-  for (let i = 0; i < projekti.length; i++) {
-  var slika = "<a href='" + projekti[i].url + "' style='max-width: 200px; white-space: pre-wrap; word-wrap: break-word;'>" +  projekti[i].ime +
-	"<picture><source srcset='" + projekti[i].slika_url + ".webp' type='image/webp' /><img src='" + projekti[i].slika_url  + ".jpg' style='width: 200px; aspect-ratio: 4 / 3; object-fit: cover; padding-top: 5px;'> </a>";
-      var marker = L.marker(projekti[i].geo_lokacija);
-      marker.bindPopup(slika);
-      marker.addTo(map);
-      markeri.set(projekti[i].id, marker);
-      //marker.bindPopup(imena[i]);
+      let url = "/api/projekti.html";
+
+      try {
+	  const response = await fetch(url);
+	  if (!response.ok) {
+	      throw new Error(`Response status: ${response.status}`);
+	  }
+	  const data = await response.text();
+	  const projekti = JSON.parse(decodeURI(data));
+	   var map = L.map('map').setView([45.7949, 15.9841], 11);
+	  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	      maxZoom: 19,
+	      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	  }).addTo(map);
+
+	  var markeri = new Map();
+
+	  for (let i = 0; i < projekti.length; i++) {
+	      var slika = "<a href='" + projekti[i].url + "' style='max-width: 200px; white-space: pre-wrap; word-wrap: break-word;'>" +  projekti[i].ime +
+		  "<picture><source srcset='" + projekti[i].slika_url + ".webp' type='image/webp' /><img src='" + projekti[i].slika_url  + ".jpg' style='width: 200px; aspect-ratio: 4 / 3; object-fit: cover; padding-top: 5px;'> </a>";
+	      var marker = L.marker(projekti[i].geo_lokacija);
+	      marker.bindPopup(slika);
+	      marker.addTo(map);
+	      markeri.set(projekti[i].id, marker);
+	  }
+      } catch (error) {
+	  console.error(error.message);
+	  document.getElementById("ucitajKartuButton").style.display = 'flex';
+      }
   }
 
   function fokusirajFilterButton(element) {

@@ -8,7 +8,36 @@ h3 {
     margin-bottom: 5px;
 }
 
-#map { height: 600px; max-height: 50vh; }
+#map {
+    height: 600px;
+    max-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-width: 3px;
+    border-color: #163d73;
+    border-style: solid;
+}
+
+#map button {
+    background-color: #163d73;
+    color: #eee;
+    font-size: 30px;
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    border-style: none;
+}
+
+#map button:hover {
+    background-color: #567db3;
+}
+
+#map button.active {
+    background-color: #365d93
+}
 
 body {
     margin: 0px;
