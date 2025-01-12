@@ -35,41 +35,51 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 </div>
 
 <script>
-
-  async function ucitajKartu() {
-      // Sakri gumb nakon sto je karta ucitana
-      document.getElementById("ucitajKartuButton").style.display = 'none';
-
-      var filteri = document.getElementById("filteri");
-
+  var kartaUcitana = false;
+  var samoGotoviProjekti = false;
+  var markeri;
+  var map;
+  var filteri = document.getElementById("filteri");
+  var projekti;  // Projekti su ucitani na kraju skripte.
+  
+  async function ucitajProjekte() {
       let url = "/api/projekti.html";
-
       try {
 	  const response = await fetch(url);
 	  if (!response.ok) {
 	      throw new Error(`Response status: ${response.status}`);
 	  }
 	  const data = await response.text();
-	  const projekti = JSON.parse(decodeURI(data));
-	   var map = L.map('map').setView([45.7949, 15.9841], 11);
-	  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	      maxZoom: 19,
-	      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-	  }).addTo(map);
-
-	  var markeri = new Map();
-
-	  for (let i = 0; i < projekti.length; i++) {
-	      var slika = "<a href='" + projekti[i].url + "' style='max-width: 200px; white-space: pre-wrap; word-wrap: break-word;'>" +  projekti[i].ime +
-		  "<picture><source srcset='" + projekti[i].slika_url + ".webp' type='image/webp' /><img src='" + projekti[i].slika_url  + ".jpg' style='width: 200px; aspect-ratio: 4 / 3; object-fit: cover; padding-top: 5px;'> </a>";
-	      var marker = L.marker(projekti[i].geo_lokacija);
-	      marker.bindPopup(slika);
-	      marker.addTo(map);
-	      markeri.set(projekti[i].id, marker);
-	  }
+	  projekti = JSON.parse(decodeURI(data));
       } catch (error) {
 	  console.error(error.message);
-	  document.getElementById("ucitajKartuButton").style.display = 'flex';
+      }
+  }
+
+  async function ucitajKartu() {
+      // Sakri gumb nakon sto je karta ucitana
+      document.getElementById("ucitajKartuButton").style.display = 'none';
+
+      map = L.map('map').setView([45.7949, 15.9841], 11);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	  maxZoom: 19,
+	  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      markeri = new Map();
+
+      for (let i = 0; i < projekti.length; i++) {
+	  var slika = "<a href='" + projekti[i].url + "' style='max-width: 200px; white-space: pre-wrap; word-wrap: break-word;'>" +  projekti[i].ime +
+	      "<picture><source srcset='" + projekti[i].slika_url + ".webp' type='image/webp' /><img src='" + projekti[i].slika_url  + ".jpg' style='width: 200px; aspect-ratio: 4 / 3; object-fit: cover; padding-top: 5px;'> </a>";
+	  var marker = L.marker(projekti[i].geo_lokacija);
+	  marker.bindPopup(slika);
+	  marker.addTo(map);
+	  markeri.set(projekti[i].id, marker);
+      }
+
+      kartaUcitana = true;
+      if (samoGotoviProjekti) {
+	  _prikaziGotoveProjekte();
       }
   }
 
@@ -89,32 +99,45 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 
       for (var i = 0; i < projekti.length; i++) {
 	  projekt = projekti[i]
-	  marker = markeri.get(projekt.id);
-	  if (!map.hasLayer(marker)) {
-	      marker.addTo(map);
-	      document.getElementById(projekt.id).style.display = 'flex';
+	  if (kartaUcitana) {
+	      var marker = markeri.get(projekt.id);
+	      if (!map.hasLayer(marker)) {
+		  marker.addTo(map);
+	      }
 	  }
+	  document.getElementById(projekt.id).style.display = 'flex';
       }
+      
+      samoGotoviProjekti = false;
   }
 
   function prikaziGotoveProjekte(element) {
       fokusirajFilterButton(element);
+      _prikaziGotoveProjekte();
+  }
 
+  function _prikaziGotoveProjekte() {
       for (var i = 0; i < projekti.length; i++) {
 	  projekt = projekti[i]
-	  marker = markeri.get(projekt.id);
+	  var marker;
+	  if (kartaUcitana) {
+	      marker = markeri.get(projekt.id);
+	  }
 	  if (projekt.faza != "Dovršeno") {
-	      if (map.hasLayer(marker)) {
+	      if (kartaUcitana && map.hasLayer(marker)) {
 		  marker.removeFrom(map);
-		  document.getElementById(projekt.id).style.display = 'none';
 	      }
+	      document.getElementById(projekt.id).style.display = 'none';
 	  } else {
-	      if (!map.hasLayer(marker)) {
+	      if (kartaUcitana && !map.hasLayer(marker)) {
 		  marker.addTo(map);
-		  document.getElementById(projekt.id).style.display = 'flex';
 	      }
+	      document.getElementById(projekt.id).style.display = 'flex';
 	  }
       }
+      samoGotoviProjekti = true;
   }
+
+  ucitajProjekte();
 
 </script>
