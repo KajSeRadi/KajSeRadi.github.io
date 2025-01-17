@@ -12,13 +12,52 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 </div>
 
 <div class="projekti">
-
+  
   {% for projekt in site.projekti reversed %}
   <a href="{{ projekt.url }}" class="projekt" id="{{ projekt.id }}">
     <div class="podaci">
       <h2>{{ projekt.ime }}</h2>
-      <h3>Trenutna faza: {{ projekt.faza }}</h3>
+      {% if projekt.trenutna_faza %}
+      {% else %}
+	<h3>Trenutna faza: {{ projekt.faza }}</h3>
+      {% endif %}
       <h3>Vrijednost: {{ projekt.vrijednost }}</h3>
+
+      {% if projekt.trenutna_faza %}
+      <div class="faze">
+	{% for faza in projekt.prikazi_faze %}
+	{% if faza != 0 %}
+	  {% if forloop.index == 1 %}
+	    <div class="trotocka gotovo"></div>
+	  {% endif %}
+	  {% if faza <= projekt.trenutna_faza %}
+	    <div class="linija gotovo"></div>
+	    <div class="checkpoint gotovo">
+	      <span class="tooltip gotovo">{{ site.data.projekti.faze_projekta[faza] }}</span>
+	    </div>
+	  {% else %}
+	    <div class="linija"></div>
+	    <div class="checkpoint">
+	      <span class="tooltip">{{ site.data.projekti.faze_projekta[faza] }}</span>
+	    </div>
+	    {% endif %}
+	{% else %}
+	{% if faza <= projekt.trenutna_faza %}
+	  <div class="trotocka skriveno"></div>
+	  <div class="checkpoint gotovo">
+	    <span class="tooltip gotovo">{{ site.data.projekti.faze_projekta[faza] }}</span>
+	  </div>
+	{% else %}
+	  <div class="checkpoint"></div>
+	{% endif %}
+	{% endif %}
+	  {% if forloop.index == forloop.length %}
+	    <div class="trotocka {% if faza == 6 %}skriveno{% endif %}"></div>
+	  {% endif %}
+	{% endfor %}
+      </div>
+      {% endif %}
+      
       <small>Posljednji put ažurirano: {{ projekt.date | date: "%d.%m.%Y." }}</small>
     </div>
     <div class="slika">

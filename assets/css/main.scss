@@ -144,7 +144,7 @@ nav a.active {
 
 .opis {
     display: flex;
-    flex: 300px;
+    flex: 400px;
 }
 
 .sadrzaj {
@@ -207,4 +207,80 @@ nav a.active {
 .projekt_stranica h4 {
     margin-top: 16px;
     margin-bottom: 5px;
+}
+
+
+.faze {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 55px;
+    padding-right: 15px;
+    padding-left: 0px;
+}
+
+.faze .checkpoint {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #aaa;
+    border-radius: 50%;
+    position: relative;
+}
+
+.faze .checkpoint.gotovo {
+    border: 2px solid #FFD700;
+}
+
+.faze .linija {
+    border: 2px solid #aaa;
+    display: flex;
+    flex: 3;
+}
+
+.faze .linija.gotovo {
+    border: 2px solid #FFD700;
+}
+
+.faze .trotocka {
+    border: none;
+    border-top: 4px dotted #aaa;
+    color:  #f1f1f1;
+    background-color: none;
+    height: 0px;
+    flex: 0 0 80px;
+}
+
+.faze .trotocka.gotovo {
+    border-top: 4px dotted #FFD700;
+}
+
+.faze .trotocka.skriveno {
+    border-top: 4px dotted #FFD700;
+    visibility: hidden;
+}
+
+.faze .tooltip {
+    visibility: hidden;
+    width: 200px;
+    background-color: #aaa;
+    color: #000;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -100px; /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+
+.faze .tooltip.gotovo {
+    background-color: #FFD700;
+    visibility: visible;
+}
+
+.checkpoint:hover .tooltip {
+  visibility: visible;
 }
