@@ -2,75 +2,38 @@
 title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 ---
 
-<div id="map">
-  <button id="ucitajKartuButton" type="button" onclick="ucitajKartu()">Učitaj kartu</button>
-</div>
+<div class="wrapper">
+  <div class="karta">
+    <div id="map">
+      <button id="ucitajKartuButton" type="button" onclick="ucitajKartu()">Učitaj kartu</button>
+    </div>
+    <div class="filteri" id="filteri">
+      <button type="button" onclick="prikaziSveProjekte(this)" class="active">Svi projekti</button>
+      <button type="button" onclick="prikaziGotoveProjekte(this)">Samo gotovi projekti</button>
+    </div>
+  </div>
+  <div class="projekti">
 
-<div class="filteri" id="filteri">
-  <button type="button" onclick="prikaziSveProjekte(this)" class="active">Svi projekti</button>
-  <button type="button" onclick="prikaziGotoveProjekte(this)">Samo gotovi projekti</button>
-</div>
-
-<div class="projekti">
-  
-  {% for projekt in site.projekti reversed %}
-  <a href="{{ projekt.url }}" class="projekt" id="{{ projekt.id }}">
-    <div class="podaci">
-      <h2>{{ projekt.ime }}</h2>
-      {% if projekt.trenutna_faza %}
-      {% else %}
-	<h3>Trenutna faza: {{ projekt.faza }}</h3>
-      {% endif %}
-      <h3>Vrijednost: {{ projekt.vrijednost }}</h3>
-
-      {% if projekt.trenutna_faza %}
-      <div class="faze">
-	{% for faza in projekt.prikazi_faze %}
-	{% if faza != 0 %}
-	  {% if forloop.index == 1 %}
-	    <div class="trotocka gotovo"></div>
-	  {% endif %}
-	  {% if faza <= projekt.trenutna_faza %}
-	    <div class="linija gotovo"></div>
-	    <div class="checkpoint gotovo">
-	      <span class="tooltip gotovo">{{ site.data.projekti.faze_projekta[faza] }}</span>
-	    </div>
-	  {% else %}
-	    <div class="linija"></div>
-	    <div class="checkpoint">
-	      <span class="tooltip">{{ site.data.projekti.faze_projekta[faza] }}</span>
-	    </div>
-	    {% endif %}
-	{% else %}
-	{% if faza <= projekt.trenutna_faza %}
-	  <div class="trotocka skriveno"></div>
-	  <div class="checkpoint gotovo">
-	    <span class="tooltip gotovo">{{ site.data.projekti.faze_projekta[faza] }}</span>
-	  </div>
-	{% else %}
-	  <div class="checkpoint"></div>
-	{% endif %}
-	{% endif %}
-	  {% if forloop.index == forloop.length %}
-	    <div class="trotocka {% if faza == 6 %}skriveno{% endif %}"></div>
-	  {% endif %}
-	{% endfor %}
+    {% for projekt in site.projekti reversed %}
+    <div class="projekt" id="{{ projekt.id }}">
+      <div class="podaci">
+        <h3><a href="{{ projekt.url }}">{{ projekt.ime }}</a></h3>
+        <div>{{ projekt.faza }}</div>
+        <div>{{ projekt.vrijednost }}</div>
+        <small>Posljednji put ažurirano: {{ projekt.date | date: "%d.%m.%Y." }}</small>
       </div>
-      {% endif %}
-      
-      <small>Posljednji put ažurirano: {{ projekt.date | date: "%d.%m.%Y." }}</small>
+      <div class="slika">
+        <picture>
+          <source srcset="{{ projekt.slika_url }}.webp" type="image/webp" />
+          <img src="{{ projekt.slika_url }}.jpg" alt="{{ projekt.slika_tekst }}">
+        </picture>
+        <br />
+        <!--<small>{{ projekt.slika_izvor }}</small>-->
+      </div>
     </div>
-    <div class="slika">
-      <picture>
-	<source srcset="{{ projekt.slika_url }}.webp" type="image/webp" />
-	<img src="{{ projekt.slika_url }}.jpg" alt="{{ projekt.slika_tekst }}">
-      </picture>
-      <br/>
-      <small>{{ projekt.slika_izvor }}</small>
-    </div>
-  </a>
-  {% endfor %}
+    {% endfor %}
 
+  </div>
 </div>
 
 <script>
@@ -80,7 +43,7 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
   var map;
   var filteri = document.getElementById("filteri");
   var projekti;  // Projekti su ucitani na kraju skripte.
-  
+
   async function ucitajProjekte() {
       let url = "/api/projekti.html";
       try {
@@ -146,9 +109,9 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 		  marker.addTo(map);
 	      }
 	  }
-	  document.getElementById(projekt.id).style.display = 'flex';
+	  document.getElementById(projekt.id).style.display = 'grid';
       }
-      
+
       samoGotoviProjekti = false;
   }
 
@@ -173,7 +136,7 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 	      if (kartaUcitana && !map.hasLayer(marker)) {
 		  marker.addTo(map);
 	      }
-	      document.getElementById(projekt.id).style.display = 'flex';
+	      document.getElementById(projekt.id).style.display = 'grid';
 	  }
       }
       samoGotoviProjekti = true;

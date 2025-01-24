@@ -1,0 +1,34 @@
+      {% if projekt.trenutna_faza %}
+      <div class="faze">
+        {% for faza in projekt.prikazi_faze %}
+        {% if faza != 0 %}
+        {% if forloop.index == 1 %}
+        <div class="trotocka gotovo"></div>
+        {% endif %}
+        {% if faza <= projekt.trenutna_faza %} <div class="linija gotovo">
+                      </div>
+      <div class="checkpoint gotovo">
+        <span class="tooltip gotovo">{{ site.data.projekti.faze_projekta[faza] }}</span>
+      </div>
+      {% else %}
+      <div class="linija"></div>
+      <div class="checkpoint">
+        <span class="tooltip">{{ site.data.projekti.faze_projekta[faza] }}</span>
+      </div>
+      {% endif %}
+      {% else %}
+      {% if faza <= projekt.trenutna_faza %} <div class="trotocka skriveno">
+                    </div>
+      <div class="checkpoint gotovo">
+          <span class="tooltip gotovo">{{ site.data.projekti.faze_projekta[faza] }}</span>
+        </div>
+        {% else %}
+        <div class="checkpoint"></div>
+        {% endif %}
+        {% endif %}
+        {% if forloop.index == forloop.length %}
+        <div class="trotocka {% if faza == 6 %}skriveno{% endif %}"></div>
+        {% endif %}
+        {% endfor %}
+      </div>
+{% endif %}
