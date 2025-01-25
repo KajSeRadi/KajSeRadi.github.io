@@ -132,8 +132,8 @@ nav a.active {
 .projekti {
     grid-area: projekti;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(512px, auto));
-    grid-auto-rows: 160px;
+    grid-template-columns: repeat(auto-fill, minmax(360px, auto));
+    grid-auto-rows: 1fr;
     gap: 24px;
     padding-top: 24px;
 }
@@ -141,15 +141,26 @@ nav a.active {
 .projekt {
     text-decoration: none;
     color: black;
+
+    background: #f1f1f1;
+    display: grid;
+    grid-template-columns: auto 180px;
+    padding-left: 12px;
 }
 
-.projekti .projekt {
-    background: #f1f1f1;
+@media (max-width: 320px) {
+    .projekti {
+        grid-template-columns: repeat(auto-fill, minmax(auto, 320px));
+    }
 
-    display: grid;
-    grid-template-columns: auto 160px;
-    grid-template-rows: 160px;
-    padding-left: 12px;
+    .projekt {
+        grid-template-columns: auto;
+        padding-left: 0px;
+    }
+
+    .podaci {
+        margin-left: 6px;
+    }
 }
 
 .projekt .zaglavlje {
@@ -157,7 +168,6 @@ nav a.active {
     padding-right: 12px;
     padding-top: 12px;
 }
-
 
 .projekt .podaci {
     display: flex;
