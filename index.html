@@ -2,146 +2,37 @@
 title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 ---
 
-<div class="wrapper">
-  <div class="karta">
-    <div id="map">
-      <button id="ucitajKartuButton" type="button" onclick="ucitajKartu()">Učitaj kartu</button>
-    </div>
-    <div class="filteri" id="filteri">
-      <button type="button" onclick="prikaziSveProjekte(this)" class="active">Svi projekti</button>
-      <button type="button" onclick="prikaziGotoveProjekte(this)">Samo gotovi projekti</button>
-    </div>
-  </div>
-  <div class="projekti">
+<div class="informacije">
+  <h1>Dobrodošli</h1>
+  <p>
+    Cilj stranice je skupiti i na jednostavan način prikazati projekte grada Zagreba.
+    Trenutno pratimo sljedeće tri kategorije:
+  </p>
 
-    {% for projekt in site.projekti reversed %}
-    <div class="projekt" id="{{ projekt.id }}">
-      <div class="podaci">
-        <h3><a href="{{ projekt.url }}">{{ projekt.ime }}</a></h3>
-        <div>{{ projekt.faza }}</div>
-        <div>{{ projekt.vrijednost }}</div>
-        <small>Posljednji put ažurirano: {{ projekt.date | date: "%d.%m.%Y." }}</small>
-      </div>
-      <div class="slika">
-        <picture>
-          <source srcset="{{ projekt.slika_url }}.webp" type="image/webp" />
-          <img src="{{ projekt.slika_url }}.jpg" alt="{{ projekt.slika_tekst }}">
-        </picture>
-        <br />
-        <!--<small>{{ projekt.slika_izvor }}</small>-->
-      </div>
-    </div>
-    {% endfor %}
-
+  <div class="pregled">
+    <a href="/infrastruktura" class="infrastruktura">
+      <h2>Infrastruktura</h2>
+      <span class="veliki-broj">{{ site.projekti | size }}</span> projekata
+    </a>
+    <a class="nabave">
+      <h2>Nabave</h2>
+      <span class="veliki-broj">0</span> nabava
+    </a>
+    <a class="place">
+      <h2>Plaće</h2>
+      <span class="veliki-broj">0</span> povećanja plaća
+    </a>
   </div>
 </div>
 
-<script>
-  var kartaUcitana = false;
-  var samoGotoviProjekti = false;
-  var markeri;
-  var map;
-  var filteri = document.getElementById("filteri");
-  var projekti;  // Projekti su ucitani na kraju skripte.
-
-  async function ucitajProjekte() {
-      let url = "/api/projekti.html";
-      try {
-	  const response = await fetch(url);
-	  if (!response.ok) {
-	      throw new Error(`Response status: ${response.status}`);
-	  }
-	  const data = await response.text();
-	  projekti = JSON.parse(decodeURI(data));
-      } catch (error) {
-	  console.error(error.message);
-      }
-  }
-
-  async function ucitajKartu() {
-      // Sakri gumb nakon sto je karta ucitana
-      document.getElementById("ucitajKartuButton").style.display = 'none';
-      document.getElementById("map").style.border = '0 none black';
-      document.getElementById("map").style.padding = '3px';
-
-      map = L.map('map').setView([45.7949, 15.9841], 11);
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	  maxZoom: 19,
-	  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      }).addTo(map);
-
-      markeri = new Map();
-
-      for (let i = 0; i < projekti.length; i++) {
-	  var slika = "<a href='" + projekti[i].url + "' style='max-width: 200px; white-space: pre-wrap; word-wrap: break-word;'>" +  projekti[i].ime +
-	      "<picture><source srcset='" + projekti[i].slika_url + ".webp' type='image/webp' /><img src='" + projekti[i].slika_url  + ".jpg' style='width: 200px; aspect-ratio: 4 / 3; object-fit: cover; padding-top: 5px;'> </a>";
-	  var marker = L.marker(projekti[i].geo_lokacija);
-	  marker.bindPopup(slika);
-	  marker.addTo(map);
-	  markeri.set(projekti[i].id, marker);
-      }
-
-      kartaUcitana = true;
-      if (samoGotoviProjekti) {
-	  _prikaziGotoveProjekte();
-      }
-  }
-
-  function fokusirajFilterButton(element) {
-      for (var i = 0; i < filteri.children.length; i++) {
-	  var child = filteri.children[i];
-	  if (child == element) {
-	      child.classList.add("active");
-	  } else {
-	      child.classList.remove("active");
-	  }
-      }
-  }
-
-  function prikaziSveProjekte(element) {
-      fokusirajFilterButton(element);
-
-      for (var i = 0; i < projekti.length; i++) {
-	  projekt = projekti[i]
-	  if (kartaUcitana) {
-	      var marker = markeri.get(projekt.id);
-	      if (!map.hasLayer(marker)) {
-		  marker.addTo(map);
-	      }
-	  }
-	  document.getElementById(projekt.id).style.display = 'grid';
-      }
-
-      samoGotoviProjekti = false;
-  }
-
-  function prikaziGotoveProjekte(element) {
-      fokusirajFilterButton(element);
-      _prikaziGotoveProjekte();
-  }
-
-  function _prikaziGotoveProjekte() {
-      for (var i = 0; i < projekti.length; i++) {
-	  projekt = projekti[i]
-	  var marker;
-	  if (kartaUcitana) {
-	      marker = markeri.get(projekt.id);
-	  }
-	  if (projekt.faza != "Dovršeno") {
-	      if (kartaUcitana && map.hasLayer(marker)) {
-		  marker.removeFrom(map);
-	      }
-	      document.getElementById(projekt.id).style.display = 'none';
-	  } else {
-	      if (kartaUcitana && !map.hasLayer(marker)) {
-		  marker.addTo(map);
-	      }
-	      document.getElementById(projekt.id).style.display = 'grid';
-	  }
-      }
-      samoGotoviProjekti = true;
-  }
-
-  ucitajProjekte();
-
-</script>
+<div class="pomoc">
+  <div class="sadrzaj">
+    <h1>Kako mogu pomoći?</h1>
+    <p>
+      Sve prijedloge možete poslati na sljedeću e-mail adresu: <a href="emailto:kajseradi@proton.me">kajseradi@proton.me</a>
+    </p>
+    <p>
+      Ako ste upoznati s platformom GitHub, onda možete pronaći kod od web stranice i uputstva za suradnju na sljedećoj poveznici: <a href="https://github.com/KajSeRadi/KajSeRadi.github.io">KajSeRadi GitHub</a>
+    </p>
+  </div>
+</div>

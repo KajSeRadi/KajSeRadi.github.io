@@ -15,6 +15,134 @@ body {
     margin: auto;
 }
 
+/***************
+     Index
+***************/
+
+.informacije {
+    max-width: 960px;
+    margin: auto;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    padding: 48px;
+}
+
+.informacije h1 {
+    margin-top: 0px;
+    text-align: center;
+    font-size: 48px;
+}
+
+.informacije p {
+    text-align: center;
+    font-size: 24px;
+}
+
+.pregled {
+    display: grid;
+    grid-gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(256px, auto));
+    grid-auto-rows: auto;
+}
+
+.pregled a {
+    text-decoration: none;
+    padding: 24px;
+    border-radius: 12px;
+    font-size: 18px;
+    color: #000;
+}
+
+.veliki-broj {
+    font-size: 48px;
+}
+
+.pregled .infrastruktura {
+    background-color: #baffc9;
+}
+
+.pregled .infrastruktura:hover {
+    filter: brightness(108%);
+}
+
+.pregled .nabave {
+    background-color: #bae1ff;
+}
+
+.pregled .place {
+    background-color: #ffffba;
+}
+
+.pregled h2 {
+    color: #163d73;
+    margin-top: 8px;
+    text-decoration: underline dotted;
+}
+
+.pomoc {
+    background-color: #ffdfba;
+    padding: 48px;
+}
+
+.pomoc .sadrzaj {
+    max-width: 960px;
+    margin: auto;
+    text-align: center;
+    font-size: 24px;
+}
+
+.pomoc h1 {
+    font-size: 48px;
+}
+
+
+
+@media (max-width: 360px) {
+    .informacije {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding: 0px;
+        padding-top: 24px;
+        padding-inline: 0px;
+    }
+
+    .informacije h1 {
+        font-size: 24px;
+    }
+
+    .pomoc {
+        padding: 24px;
+    }
+
+    .pomoc h1 {
+        font-size: 24px;
+    }
+
+    .informacije p {
+        font-size: 18px;
+        padding-inline: 16px;
+    }
+
+    .pregled {
+        grid-template-columns: repeat(auto-fill, minmax(auto, 360px));
+        gap: 0px;
+    }
+
+    .pregled a {
+        padding: 12px;
+        border-radius: 0px;
+        font-size: 18px;
+    }
+
+    .veliki-broj {
+        font-size: 24px;
+    }
+}
+
+/******************
+   Infrastruktura
+******************/
+
 .wrapper {
     display: grid;
     grid-gap: 24px;
@@ -30,11 +158,9 @@ body {
 }
 
 @media (min-width: 960px) {
-    .content {
-        margin-inline: 24px;
-    }
 
     .wrapper {
+        margin-inline: 24px;
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         grid-template-areas: "projekti projekti projekti karta karta";
     }
@@ -148,6 +274,10 @@ nav a.active {
     padding-left: 12px;
 }
 
+.projekt:hover {
+    filter: brightness(103%);
+}
+
 @media (max-width: 320px) {
     .projekti {
         grid-template-columns: repeat(auto-fill, minmax(auto, 320px));
@@ -182,7 +312,7 @@ nav a.active {
 }
 
 .podaci h3 a {
-    text-decoration: none;
+    text-decoration: underline dotted;
     color: #163d73;
 }
 
@@ -191,7 +321,7 @@ nav a.active {
 }
 
 .podaci small {
-    color: #777;
+    color: #444;
     margin-top: auto;
 }
 
