@@ -10,6 +10,28 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
     <div class="filteri" id="filteri">
       <button type="button" onclick="prikaziSveProjekte(this)" class="active">Svi projekti</button>
       <button type="button" onclick="prikaziGotoveProjekte(this)">Samo gotovi projekti</button>
+      <div class="filter-kategorija">
+	<button type="button" onclick="prikaziFilterKategorija()" class="filter-kategorija-gumb">
+	  <span>Kategorije</span>
+	</button>
+	<div role="dialog" class="filter-kategorija-dialog" id="filter-kategorija">
+	  <ul class="filter-kategorija-lista">
+	    {% for kategorija in site.data.projekti.kategorije_projekata %}
+	    <li>
+	      <div class="filter-kategorija-oznaka">
+		<input class="filter-kategorija-kucica" type="checkbox" id="kategorija-{{ kategorija.id }}" data-id="{{ kategorija.id }}" />
+		<label for="kategorija-{{ kategorija.id }}">
+		  {{ kategorija.oznaka }}
+		</label>
+	      </div>
+	    </li>
+	    {% endfor %}
+	  </ul>
+	  <button type="button" onclick="zatvoriFilterKategorija()" class="filter-kategorija-zatvori" id-"filter-kategorija-zatvori">
+	    Zatvori
+	  </button>
+	</div>
+      </div>
     </div>
   </div>
   <div class="projekti">
@@ -43,6 +65,9 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
   var map;
   var filteri = document.getElementById("filteri");
   var projekti;  // Projekti su ucitani na kraju skripte.
+
+  const filter_kategorija_kucice = document.querySelectorAll(".filter-kategorija-kucica");
+  var odabrane_kategorije = [];
 
   async function ucitajProjekte() {
       let url = "/api/projekti.html";
@@ -82,9 +107,7 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
       }
 
       kartaUcitana = true;
-      if (samoGotoviProjekti) {
-	  _prikaziGotoveProjekte();
-      }
+      osvjeziPrikazProjekata();
   }
 
   function fokusirajFilterButton(element) {
@@ -100,19 +123,8 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 
   function prikaziSveProjekte(element) {
       fokusirajFilterButton(element);
-
-      for (var i = 0; i < projekti.length; i++) {
-	  projekt = projekti[i]
-	  if (kartaUcitana) {
-	      var marker = markeri.get(projekt.id);
-	      if (!map.hasLayer(marker)) {
-		  marker.addTo(map);
-	      }
-	  }
-	  document.getElementById(projekt.id).style.display = 'grid';
-      }
-
       samoGotoviProjekti = false;
+      osvjeziPrikazProjekata();
   }
 
   function prikaziGotoveProjekte(element) {
@@ -121,25 +133,76 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
   }
 
   function _prikaziGotoveProjekte() {
+      samoGotoviProjekti = true;
+      osvjeziPrikazProjekata();
+  }
+
+  function osvjeziPrikazProjekata() {
       for (var i = 0; i < projekti.length; i++) {
 	  projekt = projekti[i]
 	  var marker;
+	  var zadovoljava_fazu = true;
+	  var zadovoljava_kategoriju = true;
 	  if (kartaUcitana) {
 	      marker = markeri.get(projekt.id);
 	  }
-	  if (projekt.faza != "Dovršeno") {
-	      if (kartaUcitana && map.hasLayer(marker)) {
-		  marker.removeFrom(map);
+	  if (samoGotoviProjekti) {
+	      if (projekt.faza != "Dovršeno") {
+		  zadovoljava_fazu = false;
 	      }
-	      document.getElementById(projekt.id).style.display = 'none';
-	  } else {
+	  }
+	  if (odabrane_kategorije.size > 0) {
+	      zadovoljava_kategoriju = false;
+	      if (projekt.hasOwnProperty('kategorije')) {
+		  for (const kategorija of projekt.kategorije) {
+		      if (odabrane_kategorije.has(kategorija)) {
+			  zadovoljava_kategoriju = true;
+			  break;
+		      }
+		  }
+	      }
+	  }
+
+	  if (zadovoljava_fazu && zadovoljava_kategoriju) {
 	      if (kartaUcitana && !map.hasLayer(marker)) {
 		  marker.addTo(map);
 	      }
 	      document.getElementById(projekt.id).style.display = 'grid';
+	  } else {
+	      if (kartaUcitana && map.hasLayer(marker)) {
+		  marker.removeFrom(map);
+	      }
+	      document.getElementById(projekt.id).style.display = 'none';
 	  }
       }
-      samoGotoviProjekti = true;
+  }
+
+  
+  function prikaziFilterKategorija() {
+      var filter_kategorija = document.getElementById("filter-kategorija");
+      if (filter_kategorija.style.display == 'flex') {
+	  filter_kategorija.style.display = 'none';
+      } else {
+	  filter_kategorija.style.display = 'flex';
+      }
+  }
+
+  function zatvoriFilterKategorija() {
+      document.getElementById("filter-kategorija").style.display = 'none';
+  }
+
+  function osvjeziKategorije() {
+      odabrane_kategorije = new Set();
+      for (const kategorija of filter_kategorija_kucice) {
+	  if (kategorija.checked) {
+	      odabrane_kategorije.add(kategorija.getAttribute("data-id"));
+	  }
+      }
+      osvjeziPrikazProjekata();
+  }
+
+  for (const kategorija of filter_kategorija_kucice) {
+      kategorija.addEventListener("click", osvjeziKategorije);
   }
 
   ucitajProjekte();

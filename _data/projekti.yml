@@ -6,3 +6,23 @@ faze_projekta:
   - Odabran izvođač
   - Radovi u tijeku
   - Dovršeno
+
+
+kategorije_projekata:
+  - id: obrazovanje
+    oznaka: Obrazovanje
+  - id: sport
+    oznaka: Sport
+  - id: kultura
+    oznaka: Kultura
+  - id: zdravstvo
+    oznaka: Zdravstvo
+  - id: prometnice
+    oznaka: Prometnice
+  - id: javni-prijevoz
+    oznaka: Javni prijevoz
+  - id: komunalne-usluge
+    oznaka: Komunalne usluge
+  - id: trznice
+    oznaka: Tržnice
+  
