@@ -368,29 +368,6 @@ nav a.active {
     max-height: 400px;
 }
 
-.velika_slika small {
-    padding-top: 5px;
-    color: #777;
-}
-
-.projekt_stranica h2 {
-    margin-top: 16px;
-    margin-bottom: 3px;
-#    font-weight: normal;
-}
-
-.projekt_stranica h3 {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-weight: normal;
-}
-
-.projekt_stranica h4 {
-    margin-top: 16px;
-    margin-bottom: 5px;
-}
-
-
 .faze {
     display: flex;
     align-items: center;
@@ -464,4 +441,38 @@ nav a.active {
 
 .checkpoint:hover .tooltip {
   visibility: visible;
+}
+
+/*****************************
+ Stranica za pojedini projekt
+*****************************/
+
+.projekt_stranica {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.velika_slika small {
+    padding-top: 5px;
+    color: #777;
+}
+
+.projekt_stranica h2 {
+    margin-top: 16px;
+    margin-bottom: 3px;
+#    font-weight: normal;
+}
+
+.projekt_stranica h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: normal;
+}
+
+.projekt_stranica h4 {
+    margin-top: 16px;
+    margin-bottom: 5px;
 }
