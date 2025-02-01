@@ -88,20 +88,20 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
       document.getElementById("ucitajKartuButton").style.display = 'none';
       document.getElementById("map").style.border = '0 none black';
       document.getElementById("map").style.padding = '3px';
-
+      
       map = L.map('map').setView([45.7949, 15.9841], 11);
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	  maxZoom: 19,
 	  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
-
+      
       markeri = new Map();
-
+      
       for (let i = 0; i < projekti.length; i++) {
 	  var slika = "<a href='" + projekti[i].url + "' style='max-width: 200px; white-space: pre-wrap; word-wrap: break-word;'>" +  projekti[i].ime +
 	      "<picture><source srcset='" + projekti[i].slika_url + ".webp' type='image/webp' /><img src='" + projekti[i].slika_url  + ".jpg' style='width: 200px; aspect-ratio: 4 / 3; object-fit: cover; padding-top: 5px;'> </a>";
 	  var marker = L.marker(projekti[i].geo_lokacija);
-	  marker.bindPopup(slika);
+		      marker.bindPopup(slika);
 	  marker.addTo(map);
 	  markeri.set(projekti[i].id, marker);
       }
@@ -109,7 +109,7 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
       kartaUcitana = true;
       osvjeziPrikazProjekata();
   }
-
+  
   function fokusirajFilterButton(element) {
       for (var i = 0; i < filteri.children.length; i++) {
 	  var child = filteri.children[i];
@@ -120,7 +120,7 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 	  }
       }
   }
-
+  
   function prikaziSveProjekte(element) {
       fokusirajFilterButton(element);
       samoGotoviProjekti = false;
@@ -136,7 +136,7 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
       samoGotoviProjekti = true;
       osvjeziPrikazProjekata();
   }
-
+  
   function osvjeziPrikazProjekata() {
       for (var i = 0; i < projekti.length; i++) {
 	  projekt = projekti[i]
@@ -153,7 +153,7 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 	  }
 	  if (odabrane_kategorije.size > 0) {
 	      zadovoljava_kategoriju = false;
-	      if (projekt.hasOwnProperty('kategorije')) {
+	      if (projekt.hasOwnProperty("kategorije")) {
 		  for (const kategorija of projekt.kategorije) {
 		      if (odabrane_kategorije.has(kategorija)) {
 			  zadovoljava_kategoriju = true;
@@ -162,7 +162,7 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
 		  }
 	      }
 	  }
-
+	  
 	  if (zadovoljava_fazu && zadovoljava_kategoriju) {
 	      if (kartaUcitana && !map.hasLayer(marker)) {
 		  marker.addTo(map);
@@ -180,15 +180,15 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
   
   function prikaziFilterKategorija() {
       var filter_kategorija = document.getElementById("filter-kategorija");
-      if (filter_kategorija.style.display == 'flex') {
-	  filter_kategorija.style.display = 'none';
+      if (filter_kategorija.style.display == "flex") {
+	  filter_kategorija.style.display = "none";
       } else {
-	  filter_kategorija.style.display = 'flex';
+	  filter_kategorija.style.display = "flex";
       }
   }
 
   function zatvoriFilterKategorija() {
-      document.getElementById("filter-kategorija").style.display = 'none';
+      document.getElementById("filter-kategorija").style.display = "none";
   }
 
   function osvjeziKategorije() {
@@ -206,5 +206,12 @@ title: "Kolekcija projekata u gradu Zagrebu i njihov trenutni status"
   }
 
   ucitajProjekte();
+			  
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.filter-kategorija')) {
+      zatvoriFilterKategorija();
+    }
+  }, false);
+
 
 </script>
